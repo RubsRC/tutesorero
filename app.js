@@ -103,13 +103,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function calculateDailyTransactions() {
+    console.log(incomeData);
+
     const transactions = [
-      ...incomeData.map((d) => ({ ...d, type: "Income" })),
-      ...fixedExpensesData.map((d) => ({ ...d, type: "Fixed Expense" })),
-      ...creditCardExpensesData.map((d) => ({
-        ...d,
-        type: "Credit Card Expense",
-      })),
+      ...incomeData.map((d) => [...d, "Income"]),
+      ...fixedExpensesData.map((d) => [...d, "Fixed Expense"]),
+      ...creditCardExpensesData.map((d) => [...d, "Credit Card Expense"]),
     ];
 
     transactions.sort((a, b) => new Date(a[0]) - new Date(b[0]));
