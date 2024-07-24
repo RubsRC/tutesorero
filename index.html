@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Tracker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Finance Tracker</h1>
+
+    <h2>Income</h2>
+    <form id="incomeForm">
+      <input type="date" id="incomeDate" required />
+      <input
+        type="text"
+        id="incomeSource"
+        placeholder="Source of Income"
+        required
+      />
+      <input type="number" id="incomeAmount" placeholder="Amount" required />
+      <button type="submit">Add Income</button>
+    </form>
+    <table id="incomeTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Source</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Fixed Expenses</h2>
+    <form id="fixedExpensesForm">
+      <input type="date" id="fixedExpensesDate" required />
+      <input
+        type="text"
+        id="fixedExpensesDescription"
+        placeholder="Description"
+        required
+      />
+      <input
+        type="number"
+        id="fixedExpensesAmount"
+        placeholder="Amount"
+        required
+      />
+      <button type="submit">Add Fixed Expense</button>
+    </form>
+    <table id="fixedExpensesTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Credit Card Expenses</h2>
+    <form id="creditCardExpensesForm">
+      <input type="date" id="creditCardExpensesDate" required />
+      <input
+        type="text"
+        id="creditCardExpensesDescription"
+        placeholder="Description"
+        required
+      />
+      <input
+        type="number"
+        id="creditCardExpensesAmount"
+        placeholder="Amount"
+        required
+      />
+      <button type="submit">Add Credit Card Expense</button>
+    </form>
+    <table id="creditCardExpensesTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Summary</h2>
+    <table id="summaryTable">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Total Income</th>
+          <th>Total Fixed Expenses</th>
+          <th>Total Credit Card Expenses</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script src="app.js"></script>
+  </body>
+</html>
