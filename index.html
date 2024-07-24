@@ -121,6 +121,28 @@
       <tbody></tbody>
     </table>
 
+    <h2>Filter by Date</h2>
+    <form id="filterForm">
+      <input type="date" id="startDate" required />
+      <input type="date" id="endDate" required />
+      <button type="submit">Filter</button>
+    </form>
+    <h3>Filtered Balance: <span id="filteredBalance">0</span></h3>
+
+    <h2>Daily Transactions</h2>
+    <table id="dailyTransactionsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Type</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
     <script src="app.js"></script>
   </body>
 </html>
