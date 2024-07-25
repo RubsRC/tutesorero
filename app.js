@@ -66,17 +66,16 @@ document.addEventListener("DOMContentLoaded", () => {
           newCell.textContent = formatAmount(cell);
         }
       });
-      const editCell = newRow.insertCell();
+      const actionsCell = newRow.insertCell();
       const editButton = document.createElement("button");
       editButton.textContent = "Edit";
       editButton.addEventListener("click", () => editEntry(type, index));
-      editCell.appendChild(editButton);
+      actionsCell.appendChild(editButton);
 
-      const removeCell = newRow.insertCell();
       const removeButton = document.createElement("button");
       removeButton.textContent = "Remove";
       removeButton.addEventListener("click", () => removeEntry(type, index));
-      removeCell.appendChild(removeButton);
+      actionsCell.appendChild(removeButton);
     });
   }
 
