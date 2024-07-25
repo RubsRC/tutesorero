@@ -30,19 +30,31 @@ document.addEventListener("DOMContentLoaded", () => {
   let debitCardExpensesData =
     JSON.parse(localStorage.getItem("debitCardExpensesData")) || [];
 
-  function updateTable(table, data) {
+  function formatAmount(amount) {
+    return parseFloat(amount).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function updateTable(table, data, type) {
     table.innerHTML = "";
-    data.forEach((row) => {
+    data.forEach((row, index) => {
       const newRow = table.insertRow();
-      row.forEach((cell) => {
+      row.forEach((cell, cellIndex) => {
         const newCell = newRow.insertCell();
         newCell.textContent = cell;
-        if (newCell.cellIndex === 2) {
+        if (cellIndex === 2) {
           // amount column
           newCell.classList.add("amount");
-          newCell.textContent = parseFloat(cell).toFixed(2);
+          newCell.textContent = formatAmount(cell);
         }
       });
+      const editCell = newRow.insertCell();
+      const editButton = document.createElement("button");
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", () => editEntry(type, index));
+      editCell.appendChild(editButton);
     });
   }
 
@@ -107,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         balance,
       ].forEach((cell, index) => {
         const newCell = newRow.insertCell();
-        newCell.textContent = index > 0 ? parseFloat(cell).toFixed(2) : cell;
+        newCell.textContent = index > 0 ? formatAmount(cell) : cell;
         if (index > 0) newCell.classList.add("amount");
       });
     });
@@ -147,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const filteredBalance =
       totalIncome -
       (totalFixedExpenses + totalCreditCardExpenses + totalDebitCardExpenses);
-    filteredBalanceElement.textContent = filteredBalance.toFixed(2);
+    filteredBalanceElement.textContent = formatAmount(filteredBalance);
   }
 
   function calculateDailyTransactions() {
@@ -168,15 +180,48 @@ document.addEventListener("DOMContentLoaded", () => {
       [
         date,
         description,
-        parseFloat(amount).toFixed(2),
+        formatAmount(amount),
         type,
-        balance.toFixed(2),
+        formatAmount(balance),
       ].forEach((cell, index) => {
         const newCell = newRow.insertCell();
         newCell.textContent = cell;
         if (index === 2 || index === 4) newCell.classList.add("amount");
       });
     });
+  }
+
+  function editEntry(type, index) {
+    let data, table;
+    if (type === "Income") {
+      data = incomeData;
+      table = incomeTable;
+    } else if (type === "Fixed Expense") {
+      data = fixedExpensesData;
+      table = fixedExpensesTable;
+    } else if (type === "Credit Card Expense") {
+      data = creditCardExpensesData;
+      table = creditCardExpensesTable;
+    } else if (type === "Debit Card Expense") {
+      data = debitCardExpensesData;
+      table = debitCardExpensesTable;
+    }
+
+    const [date, description, amount] = data[index];
+    document.getElementById("movementDate").value = date;
+    document.getElementById("movementType").value = type;
+    document.getElementById("movementDescription").value =
+      description.split(" (")[0]; // Remove category
+    document.getElementById("movementAmount").value = amount;
+    document.getElementById("movementCategory").value = description
+      .split(" (")[1]
+      .slice(0, -1); // Extract category
+
+    data.splice(index, 1);
+    updateTable(table, data, type);
+    saveData();
+    calculateSummary();
+    calculateDailyTransactions();
   }
 
   movementForm.addEventListener("submit", (e) => {
@@ -191,16 +236,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (type === "Income") {
       incomeData.push(movement);
-      updateTable(incomeTable, incomeData);
+      updateTable(incomeTable, incomeData, "Income");
     } else if (type === "Fixed Expense") {
       fixedExpensesData.push(movement);
-      updateTable(fixedExpensesTable, fixedExpensesData);
+      updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
     } else if (type === "Credit Card Expense") {
       creditCardExpensesData.push(movement);
-      updateTable(creditCardExpensesTable, creditCardExpensesData);
+      updateTable(
+        creditCardExpensesTable,
+        creditCardExpensesData,
+        "Credit Card Expense"
+      );
     } else if (type === "Debit Card Expense") {
       debitCardExpensesData.push(movement);
-      updateTable(debitCardExpensesTable, debitCardExpensesData);
+      updateTable(
+        debitCardExpensesTable,
+        debitCardExpensesData,
+        "Debit Card Expense"
+      );
     }
 
     saveData();
@@ -216,10 +269,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initial load
-  updateTable(incomeTable, incomeData);
-  updateTable(fixedExpensesTable, fixedExpensesData);
-  updateTable(creditCardExpensesTable, creditCardExpensesData);
-  updateTable(debitCardExpensesTable, debitCardExpensesData);
+  updateTable(incomeTable, incomeData, "Income");
+  updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+  updateTable(
+    creditCardExpensesTable,
+    creditCardExpensesData,
+    "Credit Card Expense"
+  );
+  updateTable(
+    debitCardExpensesTable,
+    debitCardExpensesData,
+    "Debit Card Expense"
+  );
   calculateSummary();
   calculateDailyTransactions();
 });
