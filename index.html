@@ -52,6 +52,18 @@
       button:hover {
         background-color: #0056b3;
       }
+      .actions button {
+        width: 70px;
+        margin-right: 5px;
+      }
+      #exportButton,
+      #importButton {
+        margin-top: 20px;
+        display: inline-block;
+      }
+      #buttonContainer {
+        text-align: center;
+      }
       @media (max-width: 600px) {
         table,
         form {
@@ -85,16 +97,19 @@
       />
       <input type="number" id="movementAmount" placeholder="Amount" required />
       <select id="movementCategory" required>
-        <option value="Supermarket">Supermarket</option>
-        <option value="Restaurants">Restaurants</option>
-        <option value="Health">Health</option>
-        <option value="Transportation">Transportation</option>
         <option value="Clothing">Clothing</option>
-        <option value="Insurance">Insurance</option>
-        <option value="Vanity">Vanity</option>
         <option value="Fun">Fun</option>
+        <option value="Health">Health</option>
+        <option value="Home">Home</option>
+        <option value="Insurance">Insurance</option>
         <option value="Others">Others</option>
+        <option value="Payments">Payments</option>
         <option value="Pets">Pets</option>
+        <option value="Restaurants">Restaurants</option>
+        <option value="Savings">Savings</option>
+        <option value="Supermarket">Supermarket</option>
+        <option value="Transportation">Transportation</option>
+        <option value="Vanity">Vanity</option>
       </select>
       <button type="submit" id="submitButton">Add Movement</button>
     </form>
@@ -132,6 +147,7 @@
           <th>Description</th>
           <th>Amount</th>
           <th>Type</th>
+          <th>Category</th>
           <th>Balance</th>
         </tr>
       </thead>
@@ -145,6 +161,7 @@
           <th>Date</th>
           <th>Source</th>
           <th class="amount">Amount</th>
+          <th>Category</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -158,6 +175,7 @@
           <th>Date</th>
           <th>Description</th>
           <th class="amount">Amount</th>
+          <th>Category</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -171,6 +189,7 @@
           <th>Date</th>
           <th>Description</th>
           <th class="amount">Amount</th>
+          <th>Category</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -184,15 +203,18 @@
           <th>Date</th>
           <th>Description</th>
           <th class="amount">Amount</th>
+          <th>Category</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <button id="exportButton">Export Data</button>
-    <input type="file" id="importFile" style="display: none" />
-    <button id="importButton">Import Data</button>
+    <div id="buttonContainer">
+      <button id="exportButton">Export Data</button>
+      <input type="file" id="importFile" style="display: none" />
+      <button id="importButton">Import Data</button>
+    </div>
 
     <script src="app.js"></script>
   </body>

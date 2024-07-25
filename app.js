@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
       const actionsCell = newRow.insertCell();
+      actionsCell.classList.add("actions");
       const editButton = document.createElement("button");
       editButton.textContent = "Edit";
       editButton.addEventListener("click", () => editEntry(type, index));
@@ -198,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let balance = 0;
     dailyTransactionsTable.innerHTML = "";
-    transactions.forEach(([date, description, amount, type]) => {
+    transactions.forEach(([date, description, amount, type, category]) => {
       balance += (type === "Income" ? 1 : -1) * parseFloat(amount);
       const newRow = dailyTransactionsTable.insertRow();
       [
@@ -206,11 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
         description,
         formatAmount(amount),
         type,
+        category,
         formatAmount(balance),
       ].forEach((cell, index) => {
         const newCell = newRow.insertCell();
         newCell.textContent = cell;
-        if (index === 2 || index === 4) newCell.classList.add("amount");
+        if (index === 2 || index === 5) newCell.classList.add("amount");
       });
     });
   }
@@ -227,15 +229,12 @@ document.addEventListener("DOMContentLoaded", () => {
       data = debitCardExpensesData;
     }
 
-    const [date, description, amount] = data[index];
+    const [date, description, amount, category] = data[index];
     document.getElementById("movementDate").value = date;
     document.getElementById("movementType").value = type;
-    document.getElementById("movementDescription").value =
-      description.split(" (")[0]; // Remove category
+    document.getElementById("movementDescription").value = description;
     document.getElementById("movementAmount").value = amount;
-    document.getElementById("movementCategory").value = description
-      .split(" (")[1]
-      .slice(0, -1); // Extract category
+    document.getElementById("movementCategory").value = category;
 
     editingIndex = index;
     editingType = type;
@@ -280,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const amount = document.getElementById("movementAmount").value;
     const category = document.getElementById("movementCategory").value;
 
-    const movement = [date, `${description} (${category})`, amount];
+    const movement = [date, description, amount, category];
 
     if (editingIndex !== null) {
       if (editingType === type) {
