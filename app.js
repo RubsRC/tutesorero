@@ -78,7 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const removeButton = document.createElement("button");
       removeButton.textContent = "Remove";
-      removeButton.addEventListener("click", () => removeEntry(type, index));
+      removeButton.classList.add("remove-button");
+      removeButton.addEventListener("click", () => {
+        if (confirm("Are you sure you want to remove this entry?")) {
+          removeEntry(type, index);
+        }
+      });
       actionsCell.appendChild(removeButton);
     });
   }
