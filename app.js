@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const creditCardExpensesTable = document
     .getElementById("creditCardExpensesTable")
     .getElementsByTagName("tbody")[0];
+  const debitCardExpensesTable = document
+    .getElementById("debitCardExpensesTable")
+    .getElementsByTagName("tbody")[0];
   const summaryTable = document
     .getElementById("summaryTable")
     .getElementsByTagName("tbody")[0];
@@ -19,9 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementsByTagName("tbody")[0];
   const filteredBalanceElement = document.getElementById("filteredBalance");
 
-  let incomeData = [];
-  let fixedExpensesData = [];
-  let creditCardExpensesData = [];
+  let incomeData = JSON.parse(localStorage.getItem("incomeData")) || [];
+  let fixedExpensesData =
+    JSON.parse(localStorage.getItem("fixedExpensesData")) || [];
+  let creditCardExpensesData =
+    JSON.parse(localStorage.getItem("creditCardExpensesData")) || [];
+  let debitCardExpensesData =
+    JSON.parse(localStorage.getItem("debitCardExpensesData")) || [];
 
   function updateTable(table, data) {
     table.innerHTML = "";
@@ -34,13 +41,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function saveData() {
+    localStorage.setItem("incomeData", JSON.stringify(incomeData));
+    localStorage.setItem(
+      "fixedExpensesData",
+      JSON.stringify(fixedExpensesData)
+    );
+    localStorage.setItem(
+      "creditCardExpensesData",
+      JSON.stringify(creditCardExpensesData)
+    );
+    localStorage.setItem(
+      "debitCardExpensesData",
+      JSON.stringify(debitCardExpensesData)
+    );
+  }
+
   function calculateSummary() {
     const summary = {};
 
     function addToSummary(date, amount, type) {
       const month = date.slice(0, 7);
       if (!summary[month]) {
-        summary[month] = { income: 0, fixedExpenses: 0, creditCardExpenses: 0 };
+        summary[month] = {
+          income: 0,
+          fixedExpenses: 0,
+          creditCardExpenses: 0,
+          debitCardExpenses: 0,
+        };
       }
       summary[month][type] += parseFloat(amount);
     }
@@ -54,18 +82,28 @@ document.addEventListener("DOMContentLoaded", () => {
     creditCardExpensesData.forEach(([date, , amount]) =>
       addToSummary(date, amount, "creditCardExpenses")
     );
+    debitCardExpensesData.forEach(([date, , amount]) =>
+      addToSummary(date, amount, "debitCardExpenses")
+    );
 
     summaryTable.innerHTML = "";
     Object.keys(summary).forEach((month) => {
-      const { income, fixedExpenses, creditCardExpenses } = summary[month];
-      const balance = income - (fixedExpenses + creditCardExpenses);
+      const { income, fixedExpenses, creditCardExpenses, debitCardExpenses } =
+        summary[month];
+      const balance =
+        income - (fixedExpenses + creditCardExpenses + debitCardExpenses);
       const newRow = summaryTable.insertRow();
-      [month, income, fixedExpenses, creditCardExpenses, balance].forEach(
-        (cell) => {
-          const newCell = newRow.insertCell();
-          newCell.textContent = cell;
-        }
-      );
+      [
+        month,
+        income,
+        fixedExpenses,
+        creditCardExpenses,
+        debitCardExpenses,
+        balance,
+      ].forEach((cell) => {
+        const newCell = newRow.insertCell();
+        newCell.textContent = cell;
+      });
     });
   }
 
@@ -77,6 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ([date]) => date >= startDate && date <= endDate
     );
     const filteredCreditCardExpenses = creditCardExpensesData.filter(
+      ([date]) => date >= startDate && date <= endDate
+    );
+    const filteredDebitCardExpenses = debitCardExpensesData.filter(
       ([date]) => date >= startDate && date <= endDate
     );
 
@@ -92,9 +133,14 @@ document.addEventListener("DOMContentLoaded", () => {
       (sum, [_, __, amount]) => sum + parseFloat(amount),
       0
     );
+    const totalDebitCardExpenses = filteredDebitCardExpenses.reduce(
+      (sum, [_, __, amount]) => sum + parseFloat(amount),
+      0
+    );
 
     const filteredBalance =
-      totalIncome - (totalFixedExpenses + totalCreditCardExpenses);
+      totalIncome -
+      (totalFixedExpenses + totalCreditCardExpenses + totalDebitCardExpenses);
     filteredBalanceElement.textContent = filteredBalance.toFixed(2);
   }
 
@@ -103,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ...incomeData.map((d) => [...d, "Income"]),
       ...fixedExpensesData.map((d) => [...d, "Fixed Expense"]),
       ...creditCardExpensesData.map((d) => [...d, "Credit Card Expense"]),
+      ...debitCardExpensesData.map((d) => [...d, "Debit Card Expense"]),
     ];
 
     transactions.sort((a, b) => new Date(a[0]) - new Date(b[0]));
@@ -135,8 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (type === "Credit Card Expense") {
       creditCardExpensesData.push([date, description, amount]);
       updateTable(creditCardExpensesTable, creditCardExpensesData);
+    } else if (type === "Debit Card Expense") {
+      debitCardExpensesData.push([date, description, amount]);
+      updateTable(debitCardExpensesTable, debitCardExpensesData);
     }
 
+    saveData();
     calculateSummary();
     calculateDailyTransactions();
   });
@@ -147,4 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const endDate = document.getElementById("endDate").value;
     filterData(startDate, endDate);
   });
+
+  // Initial load
+  updateTable(incomeTable, incomeData);
+  updateTable(fixedExpensesTable, fixedExpensesData);
+  updateTable(creditCardExpensesTable, creditCardExpensesData);
+  updateTable(debitCardExpensesTable, debitCardExpensesData);
+  calculateSummary();
+  calculateDailyTransactions();
 });

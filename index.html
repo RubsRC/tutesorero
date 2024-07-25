@@ -23,6 +23,9 @@
       th {
         background-color: #f4f4f4;
       }
+      form {
+        margin-bottom: 20px;
+      }
     </style>
   </head>
   <body>
@@ -35,6 +38,7 @@
         <option value="Income">Income</option>
         <option value="Fixed Expense">Fixed Expense</option>
         <option value="Credit Card Expense">Credit Card Expense</option>
+        <option value="Debit Card Expense">Debit Card Expense</option>
       </select>
       <input
         type="text"
@@ -62,6 +66,7 @@
           <th>Total Income</th>
           <th>Total Fixed Expenses</th>
           <th>Total Credit Card Expenses</th>
+          <th>Total Debit Card Expenses</th>
           <th>Balance</th>
         </tr>
       </thead>
@@ -108,6 +113,18 @@
 
     <h2>Credit Card Expenses</h2>
     <table id="creditCardExpensesTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Debit Card Expenses</h2>
+    <table id="debitCardExpensesTable">
       <thead>
         <tr>
           <th>Date</th>
