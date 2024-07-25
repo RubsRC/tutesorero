@@ -37,6 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
       row.forEach((cell) => {
         const newCell = newRow.insertCell();
         newCell.textContent = cell;
+        if (newCell.cellIndex === 2) {
+          // amount column
+          newCell.classList.add("amount");
+          newCell.textContent = parseFloat(cell).toFixed(2);
+        }
       });
     });
   }
@@ -100,9 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
         creditCardExpenses,
         debitCardExpenses,
         balance,
-      ].forEach((cell) => {
+      ].forEach((cell, index) => {
         const newCell = newRow.insertCell();
-        newCell.textContent = cell;
+        newCell.textContent = index > 0 ? parseFloat(cell).toFixed(2) : cell;
+        if (index > 0) newCell.classList.add("amount");
       });
     });
   }
@@ -159,9 +165,16 @@ document.addEventListener("DOMContentLoaded", () => {
     transactions.forEach(([date, description, amount, type]) => {
       balance += (type === "Income" ? 1 : -1) * parseFloat(amount);
       const newRow = dailyTransactionsTable.insertRow();
-      [date, description, amount, type, balance.toFixed(2)].forEach((cell) => {
+      [
+        date,
+        description,
+        parseFloat(amount).toFixed(2),
+        type,
+        balance.toFixed(2),
+      ].forEach((cell, index) => {
         const newCell = newRow.insertCell();
         newCell.textContent = cell;
+        if (index === 2 || index === 4) newCell.classList.add("amount");
       });
     });
   }
@@ -172,18 +185,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const type = document.getElementById("movementType").value;
     const description = document.getElementById("movementDescription").value;
     const amount = document.getElementById("movementAmount").value;
+    const category = document.getElementById("movementCategory").value;
+
+    const movement = [date, `${description} (${category})`, amount];
 
     if (type === "Income") {
-      incomeData.push([date, description, amount]);
+      incomeData.push(movement);
       updateTable(incomeTable, incomeData);
     } else if (type === "Fixed Expense") {
-      fixedExpensesData.push([date, description, amount]);
+      fixedExpensesData.push(movement);
       updateTable(fixedExpensesTable, fixedExpensesData);
     } else if (type === "Credit Card Expense") {
-      creditCardExpensesData.push([date, description, amount]);
+      creditCardExpensesData.push(movement);
       updateTable(creditCardExpensesTable, creditCardExpensesData);
     } else if (type === "Debit Card Expense") {
-      debitCardExpensesData.push([date, description, amount]);
+      debitCardExpensesData.push(movement);
       updateTable(debitCardExpensesTable, debitCardExpensesData);
     }
 
