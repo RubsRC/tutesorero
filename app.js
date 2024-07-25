@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const incomeForm = document.getElementById("incomeForm");
-  const fixedExpensesForm = document.getElementById("fixedExpensesForm");
-  const creditCardExpensesForm = document.getElementById(
-    "creditCardExpensesForm"
-  );
+  const movementForm = document.getElementById("movementForm");
   const filterForm = document.getElementById("filterForm");
 
   const incomeTable = document
@@ -103,8 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function calculateDailyTransactions() {
-    console.log(incomeData);
-
     const transactions = [
       ...incomeData.map((d) => [...d, "Income"]),
       ...fixedExpensesData.map((d) => [...d, "Fixed Expense"]),
@@ -112,8 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     transactions.sort((a, b) => new Date(a[0]) - new Date(b[0]));
-
-    console.log(transactions);
 
     let balance = 0;
     dailyTransactionsTable.innerHTML = "";
@@ -127,39 +119,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  incomeForm.addEventListener("submit", (e) => {
+  movementForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const date = document.getElementById("incomeDate").value;
-    const source = document.getElementById("incomeSource").value;
-    const amount = document.getElementById("incomeAmount").value;
-    incomeData.push([date, source, amount]);
-    updateTable(incomeTable, incomeData);
-    calculateSummary();
-    calculateDailyTransactions();
-  });
+    const date = document.getElementById("movementDate").value;
+    const type = document.getElementById("movementType").value;
+    const description = document.getElementById("movementDescription").value;
+    const amount = document.getElementById("movementAmount").value;
 
-  fixedExpensesForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const date = document.getElementById("fixedExpensesDate").value;
-    const description = document.getElementById(
-      "fixedExpensesDescription"
-    ).value;
-    const amount = document.getElementById("fixedExpensesAmount").value;
-    fixedExpensesData.push([date, description, amount]);
-    updateTable(fixedExpensesTable, fixedExpensesData);
-    calculateSummary();
-    calculateDailyTransactions();
-  });
+    if (type === "Income") {
+      incomeData.push([date, description, amount]);
+      updateTable(incomeTable, incomeData);
+    } else if (type === "Fixed Expense") {
+      fixedExpensesData.push([date, description, amount]);
+      updateTable(fixedExpensesTable, fixedExpensesData);
+    } else if (type === "Credit Card Expense") {
+      creditCardExpensesData.push([date, description, amount]);
+      updateTable(creditCardExpensesTable, creditCardExpensesData);
+    }
 
-  creditCardExpensesForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const date = document.getElementById("creditCardExpensesDate").value;
-    const description = document.getElementById(
-      "creditCardExpensesDescription"
-    ).value;
-    const amount = document.getElementById("creditCardExpensesAmount").value;
-    creditCardExpensesData.push([date, description, amount]);
-    updateTable(creditCardExpensesTable, creditCardExpensesData);
     calculateSummary();
     calculateDailyTransactions();
   });
