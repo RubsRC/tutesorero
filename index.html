@@ -34,7 +34,7 @@
   <body>
     <h1>Finance Tracker</h1>
 
-    <h2>Add Movement</h2>
+    <h2 id="formHeader">Add Movement</h2>
     <form id="movementForm">
       <input type="date" id="movementDate" required />
       <select id="movementType" required>
@@ -57,7 +57,7 @@
         <option value="Health">Health</option>
         <option value="Others">Others</option>
       </select>
-      <button type="submit">Add Movement</button>
+      <button type="submit" id="submitButton">Add Movement</button>
     </form>
 
     <h2>Filter by Date</h2>

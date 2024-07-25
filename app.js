@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const movementForm = document.getElementById("movementForm");
   const filterForm = document.getElementById("filterForm");
+  const formHeader = document.getElementById("formHeader");
+  const submitButton = document.getElementById("submitButton");
 
   const incomeTable = document
     .getElementById("incomeTable")
@@ -29,12 +31,26 @@ document.addEventListener("DOMContentLoaded", () => {
     JSON.parse(localStorage.getItem("creditCardExpensesData")) || [];
   let debitCardExpensesData =
     JSON.parse(localStorage.getItem("debitCardExpensesData")) || [];
+  let editingIndex = null;
+  let editingType = null;
 
   function formatAmount(amount) {
     return parseFloat(amount).toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+  }
+
+  function clearForm() {
+    document.getElementById("movementDate").value = "";
+    document.getElementById("movementType").value = "Income";
+    document.getElementById("movementDescription").value = "";
+    document.getElementById("movementAmount").value = "";
+    document.getElementById("movementCategory").value = "General";
+    editingIndex = null;
+    editingType = null;
+    formHeader.textContent = "Add Movement";
+    submitButton.textContent = "Add Movement";
   }
 
   function updateTable(table, data, type) {
@@ -192,19 +208,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function editEntry(type, index) {
-    let data, table;
+    let data;
     if (type === "Income") {
       data = incomeData;
-      table = incomeTable;
     } else if (type === "Fixed Expense") {
       data = fixedExpensesData;
-      table = fixedExpensesTable;
     } else if (type === "Credit Card Expense") {
       data = creditCardExpensesData;
-      table = creditCardExpensesTable;
     } else if (type === "Debit Card Expense") {
       data = debitCardExpensesData;
-      table = debitCardExpensesTable;
     }
 
     const [date, description, amount] = data[index];
@@ -217,11 +229,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .split(" (")[1]
       .slice(0, -1); // Extract category
 
-    data.splice(index, 1);
-    updateTable(table, data, type);
-    saveData();
-    calculateSummary();
-    calculateDailyTransactions();
+    editingIndex = index;
+    editingType = type;
+    formHeader.textContent = "Edit Movement";
+    submitButton.textContent = "Update Movement";
   }
 
   movementForm.addEventListener("submit", (e) => {
@@ -234,28 +245,102 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const movement = [date, `${description} (${category})`, amount];
 
-    if (type === "Income") {
-      incomeData.push(movement);
-      updateTable(incomeTable, incomeData, "Income");
-    } else if (type === "Fixed Expense") {
-      fixedExpensesData.push(movement);
-      updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
-    } else if (type === "Credit Card Expense") {
-      creditCardExpensesData.push(movement);
-      updateTable(
-        creditCardExpensesTable,
-        creditCardExpensesData,
-        "Credit Card Expense"
-      );
-    } else if (type === "Debit Card Expense") {
-      debitCardExpensesData.push(movement);
-      updateTable(
-        debitCardExpensesTable,
-        debitCardExpensesData,
-        "Debit Card Expense"
-      );
+    if (editingIndex !== null) {
+      if (editingType === type) {
+        // Update in the same type array
+        if (type === "Income") {
+          incomeData[editingIndex] = movement;
+          updateTable(incomeTable, incomeData, "Income");
+        } else if (type === "Fixed Expense") {
+          fixedExpensesData[editingIndex] = movement;
+          updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+        } else if (type === "Credit Card Expense") {
+          creditCardExpensesData[editingIndex] = movement;
+          updateTable(
+            creditCardExpensesTable,
+            creditCardExpensesData,
+            "Credit Card Expense"
+          );
+        } else if (type === "Debit Card Expense") {
+          debitCardExpensesData[editingIndex] = movement;
+          updateTable(
+            debitCardExpensesTable,
+            debitCardExpensesData,
+            "Debit Card Expense"
+          );
+        }
+      } else {
+        // Remove from old type array and add to new type array
+        if (editingType === "Income") {
+          incomeData.splice(editingIndex, 1);
+          updateTable(incomeTable, incomeData, "Income");
+        } else if (editingType === "Fixed Expense") {
+          fixedExpensesData.splice(editingIndex, 1);
+          updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+        } else if (editingType === "Credit Card Expense") {
+          creditCardExpensesData.splice(editingIndex, 1);
+          updateTable(
+            creditCardExpensesTable,
+            creditCardExpensesData,
+            "Credit Card Expense"
+          );
+        } else if (editingType === "Debit Card Expense") {
+          debitCardExpensesData.splice(editingIndex, 1);
+          updateTable(
+            debitCardExpensesTable,
+            debitCardExpensesData,
+            "Debit Card Expense"
+          );
+        }
+
+        if (type === "Income") {
+          incomeData.push(movement);
+          updateTable(incomeTable, incomeData, "Income");
+        } else if (type === "Fixed Expense") {
+          fixedExpensesData.push(movement);
+          updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+        } else if (type === "Credit Card Expense") {
+          creditCardExpensesData.push(movement);
+          updateTable(
+            creditCardExpensesTable,
+            creditCardExpensesData,
+            "Credit Card Expense"
+          );
+        } else if (type === "Debit Card Expense") {
+          debitCardExpensesData.push(movement);
+          updateTable(
+            debitCardExpensesTable,
+            debitCardExpensesData,
+            "Debit Card Expense"
+          );
+        }
+      }
+    } else {
+      // Add new entry
+      if (type === "Income") {
+        incomeData.push(movement);
+        updateTable(incomeTable, incomeData, "Income");
+      } else if (type === "Fixed Expense") {
+        fixedExpensesData.push(movement);
+        updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+      } else if (type === "Credit Card Expense") {
+        creditCardExpensesData.push(movement);
+        updateTable(
+          creditCardExpensesTable,
+          creditCardExpensesData,
+          "Credit Card Expense"
+        );
+      } else if (type === "Debit Card Expense") {
+        debitCardExpensesData.push(movement);
+        updateTable(
+          debitCardExpensesTable,
+          debitCardExpensesData,
+          "Debit Card Expense"
+        );
+      }
     }
 
+    clearForm();
     saveData();
     calculateSummary();
     calculateDailyTransactions();
