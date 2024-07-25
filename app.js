@@ -71,6 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
       editButton.textContent = "Edit";
       editButton.addEventListener("click", () => editEntry(type, index));
       editCell.appendChild(editButton);
+
+      const removeCell = newRow.insertCell();
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      removeButton.addEventListener("click", () => removeEntry(type, index));
+      removeCell.appendChild(removeButton);
     });
   }
 
@@ -233,6 +239,35 @@ document.addEventListener("DOMContentLoaded", () => {
     editingType = type;
     formHeader.textContent = "Edit Movement";
     submitButton.textContent = "Update Movement";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function removeEntry(type, index) {
+    if (type === "Income") {
+      incomeData.splice(index, 1);
+      updateTable(incomeTable, incomeData, "Income");
+    } else if (type === "Fixed Expense") {
+      fixedExpensesData.splice(index, 1);
+      updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+    } else if (type === "Credit Card Expense") {
+      creditCardExpensesData.splice(index, 1);
+      updateTable(
+        creditCardExpensesTable,
+        creditCardExpensesData,
+        "Credit Card Expense"
+      );
+    } else if (type === "Debit Card Expense") {
+      debitCardExpensesData.splice(index, 1);
+      updateTable(
+        debitCardExpensesTable,
+        debitCardExpensesData,
+        "Debit Card Expense"
+      );
+    }
+
+    saveData();
+    calculateSummary();
+    calculateDailyTransactions();
   }
 
   movementForm.addEventListener("submit", (e) => {
