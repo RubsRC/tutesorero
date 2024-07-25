@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterForm = document.getElementById("filterForm");
   const formHeader = document.getElementById("formHeader");
   const submitButton = document.getElementById("submitButton");
+  const exportButton = document.getElementById("exportButton");
+  const importButton = document.getElementById("importButton");
+  const importFile = document.getElementById("importFile");
 
   const incomeTable = document
     .getElementById("incomeTable")
@@ -46,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("movementType").value = "Income";
     document.getElementById("movementDescription").value = "";
     document.getElementById("movementAmount").value = "";
-    document.getElementById("movementCategory").value = "General";
+    document.getElementById("movementCategory").value = "Supermarket";
     editingIndex = null;
     editingType = null;
     formHeader.textContent = "Add Movement";
@@ -385,6 +388,58 @@ document.addEventListener("DOMContentLoaded", () => {
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
     filterData(startDate, endDate);
+  });
+
+  exportButton.addEventListener("click", () => {
+    const data = {
+      incomeData,
+      fixedExpensesData,
+      creditCardExpensesData,
+      debitCardExpensesData,
+    };
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "finance_data.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  importButton.addEventListener("click", () => {
+    importFile.click();
+  });
+
+  importFile.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = JSON.parse(event.target.result);
+        incomeData = data.incomeData || [];
+        fixedExpensesData = data.fixedExpensesData || [];
+        creditCardExpensesData = data.creditCardExpensesData || [];
+        debitCardExpensesData = data.debitCardExpensesData || [];
+        saveData();
+        updateTable(incomeTable, incomeData, "Income");
+        updateTable(fixedExpensesTable, fixedExpensesData, "Fixed Expense");
+        updateTable(
+          creditCardExpensesTable,
+          creditCardExpensesData,
+          "Credit Card Expense"
+        );
+        updateTable(
+          debitCardExpensesTable,
+          debitCardExpensesData,
+          "Debit Card Expense"
+        );
+        calculateSummary();
+        calculateDailyTransactions();
+      };
+      reader.readAsText(file);
+    }
   });
 
   // Initial load
