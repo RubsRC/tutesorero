@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const movementForm = document.getElementById("movementForm");
   const formHeader = document.getElementById("formHeader");
   const submitButton = document.getElementById("submitButton");
+  const startDateInput = document.getElementById("startDate");
+  const endDateInput = document.getElementById("endDate");
+  const filterForm = document.getElementById("filterForm");
 
   function clearForm() {
     document.getElementById("movementDate").value = new Date()
@@ -15,6 +18,30 @@ document.addEventListener("DOMContentLoaded", () => {
     editingType = null;
     formHeader.textContent = "Add Movement";
     submitButton.textContent = "Add Movement";
+  }
+
+  function setDefaultFilterDates() {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const startDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDay <= 15 ? 1 : 16
+    );
+    const endDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDay <= 15
+        ? 15
+        : new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth() + 1,
+            0
+          ).getDate()
+    );
+
+    startDateInput.value = startDate.toISOString().slice(0, 10);
+    endDateInput.value = endDate.toISOString().slice(0, 10);
   }
 
   movementForm.addEventListener("submit", (e) => {
@@ -153,6 +180,16 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateDailyTransactions();
   });
 
+  filterForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+    filterData(startDate, endDate);
+  });
+
   clearForm();
+  setDefaultFilterDates();
   calculateSummary();
+  // Submit the filter form on initial load to show the current filtered balance
+  filterForm.dispatchEvent(new Event("submit"));
 });
