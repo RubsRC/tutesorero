@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearForm() {
     document.getElementById("movementDate").value = "";
-    document.getElementById("movementType").value = "Income";
+    document.getElementById("movementType").value = "Credit Card Expense";
     document.getElementById("movementDescription").value = "";
     document.getElementById("movementAmount").value = "";
     document.getElementById("movementCategory").value = "Supermarket";
@@ -57,8 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateTable(table, data, type) {
+    let total = 0;
     table.innerHTML = "";
     data.forEach((row, index) => {
+      total += parseFloat(row[2]);
       const newRow = table.insertRow();
       row.forEach((cell, cellIndex) => {
         const newCell = newRow.insertCell();
@@ -86,6 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       actionsCell.appendChild(removeButton);
     });
+    const totalRow = table.insertRow();
+    totalRow.innerHTML = `
+            <td colspan="2"><strong>Total</strong></td>
+            <td class="amount"><strong>${formatAmount(total)}</strong></td>
+            <td colspan="2"></td>
+        `;
   }
 
   function saveData() {
@@ -461,4 +469,73 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   calculateSummary();
   calculateDailyTransactions();
+
+  // Sort movement types alphabetically
+  const movementTypeSelect = document.getElementById("movementType");
+  const options = Array.from(movementTypeSelect.options);
+  options.sort((a, b) => a.text.localeCompare(b.text));
+  options.forEach((option) => movementTypeSelect.add(option));
+
+  // Update category options based on movement type
+  movementTypeSelect.addEventListener("change", () => {
+    const movementCategorySelect = document.getElementById("movementCategory");
+    movementCategorySelect.innerHTML = "";
+    if (movementTypeSelect.value === "Income") {
+      ["Full Time", "Freelance"].forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.text = category;
+        movementCategorySelect.add(option);
+      });
+    } else {
+      [
+        "Clothing",
+        "Fun",
+        "Health",
+        "Home",
+        "Insurance",
+        "Others",
+        "Payments",
+        "Pets",
+        "Restaurants",
+        "Savings",
+        "Supermarket",
+        "Transportation",
+        "Vanity",
+      ].forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.text = category;
+        movementCategorySelect.add(option);
+      });
+    }
+  });
+  movementTypeSelect.dispatchEvent(new Event("change")); // Trigger initial load
+
+  // Set default filter dates to the current fortnight of the month
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const startDateInput = document.getElementById("startDate");
+  const endDateInput = document.getElementById("endDate");
+  const startDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDay <= 15 ? 1 : 16
+  );
+  const endDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDay <= 15
+      ? 15
+      : new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          0
+        ).getDate()
+  );
+
+  startDateInput.value = startDate.toISOString().slice(0, 10);
+  endDateInput.value = endDate.toISOString().slice(0, 10);
+
+  filterData(startDateInput.value, endDateInput.value);
 });
