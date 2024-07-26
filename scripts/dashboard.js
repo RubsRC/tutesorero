@@ -2,9 +2,63 @@ document.addEventListener("DOMContentLoaded", () => {
   const movementForm = document.getElementById("movementForm");
   const formHeader = document.getElementById("formHeader");
   const submitButton = document.getElementById("submitButton");
+  const movementTypeSelect = document.getElementById("movementType");
+  const movementCategorySelect = document.getElementById("movementCategory");
   const startDateInput = document.getElementById("startDate");
   const endDateInput = document.getElementById("endDate");
   const filterForm = document.getElementById("filterForm");
+
+  let incomeSortOrder = "DESC";
+  let creditCardExpensesSortOrder = "DESC";
+  let debitCardExpensesSortOrder = "DESC";
+
+  const allCategories = {
+    Income: ["Full time", "Freelance"],
+    "Credit Card Expense": [
+      "Clothing",
+      "Fun",
+      "Health",
+      "Home",
+      "Insurance",
+      "Others",
+      "Payments",
+      "Pets",
+      "Restaurants",
+      "Savings",
+      "Supermarket",
+      "Transportation",
+      "Vanity",
+      "Subscription",
+    ],
+    "Debit Card Expense": [
+      "Clothing",
+      "Fun",
+      "Health",
+      "Home",
+      "Insurance",
+      "Others",
+      "Payments",
+      "Pets",
+      "Restaurants",
+      "Savings",
+      "Supermarket",
+      "Transportation",
+      "Vanity",
+      "Subscription",
+    ],
+  };
+
+  function updateCategoryOptions() {
+    const selectedType = movementTypeSelect.value;
+    const categories = allCategories[selectedType];
+    movementCategorySelect.innerHTML = "";
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      movementCategorySelect.appendChild(option);
+    });
+  }
 
   function clearForm() {
     document.getElementById("movementDate").value = new Date()
@@ -18,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     editingType = null;
     formHeader.textContent = "Add Movement";
     submitButton.textContent = "Add Movement";
+    updateCategoryOptions();
   }
 
   function setDefaultFilterDates() {
@@ -63,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("incomeTable")
               .getElementsByTagName("tbody")[0],
             incomeData,
-            "Income"
+            "Income",
+            incomeSortOrder
           );
         } else if (type === "Credit Card Expense") {
           creditCardExpensesData[editingIndex] = movement;
@@ -72,7 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("creditCardExpensesTable")
               .getElementsByTagName("tbody")[0],
             creditCardExpensesData,
-            "Credit Card Expense"
+            "Credit Card Expense",
+            creditCardExpensesSortOrder
           );
         } else if (type === "Debit Card Expense") {
           debitCardExpensesData[editingIndex] = movement;
@@ -81,7 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("debitCardExpensesTable")
               .getElementsByTagName("tbody")[0],
             debitCardExpensesData,
-            "Debit Card Expense"
+            "Debit Card Expense",
+            debitCardExpensesSortOrder
           );
         }
       } else {
@@ -92,7 +150,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("incomeTable")
               .getElementsByTagName("tbody")[0],
             incomeData,
-            "Income"
+            "Income",
+            incomeSortOrder
           );
         } else if (editingType === "Credit Card Expense") {
           creditCardExpensesData.splice(editingIndex, 1);
@@ -101,7 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("creditCardExpensesTable")
               .getElementsByTagName("tbody")[0],
             creditCardExpensesData,
-            "Credit Card Expense"
+            "Credit Card Expense",
+            creditCardExpensesSortOrder
           );
         } else if (editingType === "Debit Card Expense") {
           debitCardExpensesData.splice(editingIndex, 1);
@@ -110,7 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("debitCardExpensesTable")
               .getElementsByTagName("tbody")[0],
             debitCardExpensesData,
-            "Debit Card Expense"
+            "Debit Card Expense",
+            debitCardExpensesSortOrder
           );
         }
 
@@ -121,7 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("incomeTable")
               .getElementsByTagName("tbody")[0],
             incomeData,
-            "Income"
+            "Income",
+            incomeSortOrder
           );
         } else if (type === "Credit Card Expense") {
           creditCardExpensesData.push(movement);
@@ -130,7 +192,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("creditCardExpensesTable")
               .getElementsByTagName("tbody")[0],
             creditCardExpensesData,
-            "Credit Card Expense"
+            "Credit Card Expense",
+            creditCardExpensesSortOrder
           );
         } else if (type === "Debit Card Expense") {
           debitCardExpensesData.push(movement);
@@ -139,7 +202,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .getElementById("debitCardExpensesTable")
               .getElementsByTagName("tbody")[0],
             debitCardExpensesData,
-            "Debit Card Expense"
+            "Debit Card Expense",
+            debitCardExpensesSortOrder
           );
         }
       }
@@ -151,7 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("incomeTable")
             .getElementsByTagName("tbody")[0],
           incomeData,
-          "Income"
+          "Income",
+          incomeSortOrder
         );
       } else if (type === "Credit Card Expense") {
         creditCardExpensesData.push(movement);
@@ -160,7 +225,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("creditCardExpensesTable")
             .getElementsByTagName("tbody")[0],
           creditCardExpensesData,
-          "Credit Card Expense"
+          "Credit Card Expense",
+          creditCardExpensesSortOrder
         );
       } else if (type === "Debit Card Expense") {
         debitCardExpensesData.push(movement);
@@ -169,7 +235,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("debitCardExpensesTable")
             .getElementsByTagName("tbody")[0],
           debitCardExpensesData,
-          "Debit Card Expense"
+          "Debit Card Expense",
+          debitCardExpensesSortOrder
         );
       }
     }
@@ -186,6 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const endDate = endDateInput.value;
     filterData(startDate, endDate);
   });
+
+  movementTypeSelect.addEventListener("change", updateCategoryOptions);
 
   clearForm();
   setDefaultFilterDates();
