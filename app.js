@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let balance = 0;
     dailyTransactionsTable.innerHTML = "";
-    transactions.forEach(([date, description, amount, type, category]) => {
+    transactions.forEach(([date, description, amount, category, type]) => {
       balance += (type === "Income" ? 1 : -1) * parseFloat(amount);
       const newRow = dailyTransactionsTable.insertRow();
       [
