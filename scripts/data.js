@@ -166,6 +166,7 @@ function editEntry(type, index) {
   editingType = type;
   document.getElementById("formHeader").textContent = "Edit Movement";
   document.getElementById("submitButton").textContent = "Update Movement";
+  showPage("dashboard"); // Show the dashboard page where the form is located
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -231,5 +232,12 @@ function calculateDailyTransactions() {
       newCell.textContent = cell;
       if (index === 2 || index === 5) newCell.classList.add("amount");
     });
+  });
+}
+
+// Helper function to show the specified page
+function showPage(pageId) {
+  document.querySelectorAll(".page").forEach((page) => {
+    page.style.display = page.id === pageId ? "block" : "none";
   });
 }
