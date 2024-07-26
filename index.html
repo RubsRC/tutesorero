@@ -16,6 +16,7 @@
         <li><a href="#credit-card-expenses">Credit Card Expenses</a></li>
         <li><a href="#debit-card-expenses">Debit Card Expenses</a></li>
         <li><a href="#charts">Charts</a></li>
+        <li><a href="#export-import">Export/Import</a></li>
       </ul>
     </nav>
 
@@ -154,11 +155,19 @@
       <canvas id="debitCardExpensesChart"></canvas>
     </div>
 
+    <div id="export-import" class="page">
+      <h1>Export/Import</h1>
+      <button id="exportButton">Export Data</button>
+      <input type="file" id="importFileInput" style="display: none" />
+      <button id="importButton">Import Data</button>
+    </div>
+
     <script src="scripts/data.js"></script>
     <script src="scripts/dashboard.js"></script>
     <script src="scripts/dailyTransactions.js"></script>
     <script src="scripts/movementTypes.js"></script>
     <script src="scripts/navigation.js"></script>
     <script src="scripts/charts.js"></script>
+    <script src="scripts/exportImport.js"></script>
   </body>
 </html>
