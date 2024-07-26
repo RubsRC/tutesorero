@@ -90,10 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const totalRow = table.insertRow();
     totalRow.innerHTML = `
-            <td colspan="2"><strong>Total</strong></td>
-            <td class="amount"><strong>${formatAmount(total)}</strong></td>
-            <td colspan="2"></td>
-        `;
+              <td colspan="2"><strong>Total</strong></td>
+              <td class="amount"><strong>${formatAmount(total)}</strong></td>
+              <td colspan="2"></td>
+          `;
   }
 
   function saveData() {
@@ -149,7 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
         income - (fixedExpenses + creditCardExpenses + debitCardExpenses);
       const newRow = summaryTable.insertRow();
       [
-        month,
+        new Date(month).toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        }),
         income,
         fixedExpenses,
         creditCardExpenses,
