@@ -4,233 +4,150 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finance Tracker</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-      }
-      th,
-      td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: left;
-      }
-      th {
-        background-color: #f4f4f4;
-      }
-      .amount {
-        text-align: right;
-      }
-      .amount::before {
-        content: "$";
-      }
-      form,
-      table {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      select,
-      input,
-      button {
-        width: 100%;
-        max-width: 300px;
-        margin-bottom: 10px;
-      }
-      button {
-        padding: 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-      .actions button {
-        width: 70px;
-        margin-right: 5px;
-      }
-      .remove-button {
-        background-color: #f8d7da;
-        color: #721c24;
-      }
-      .remove-button:hover {
-        background-color: #f5c6cb;
-      }
-      #exportButton,
-      #importButton {
-        margin-top: 20px;
-        display: inline-block;
-      }
-      #buttonContainer {
-        text-align: center;
-      }
-      @media (max-width: 600px) {
-        table,
-        form {
-          width: 100%;
-          margin: 0;
-        }
-        th,
-        td {
-          font-size: 14px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Finance Tracker</h1>
+    <nav>
+      <ul>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#daily-transactions">Daily Transactions</a></li>
+        <li><a href="#income">Income</a></li>
+        <li><a href="#credit-card-expenses">Credit Card Expenses</a></li>
+        <li><a href="#debit-card-expenses">Debit Card Expenses</a></li>
+      </ul>
+    </nav>
 
-    <h2 id="formHeader">Add Movement</h2>
-    <form id="movementForm">
-      <input type="date" id="movementDate" required />
-      <select id="movementType" required>
-        <option value="Income">Income</option>
-        <option value="Fixed Expense">Fixed Expense</option>
-        <option value="Credit Card Expense" selected>
-          Credit Card Expense
-        </option>
-        <option value="Debit Card Expense">Debit Card Expense</option>
-      </select>
-      <input
-        type="text"
-        id="movementDescription"
-        placeholder="Description"
-        required
-      />
-      <input
-        type="number"
-        id="movementAmount"
-        step="0.01"
-        placeholder="Amount"
-        required
-      />
-      <select id="movementCategory" required>
-        <option value="Clothing">Clothing</option>
-        <option value="Fun">Fun</option>
-        <option value="Health">Health</option>
-        <option value="Home">Home</option>
-        <option value="Insurance">Insurance</option>
-        <option value="Others">Others</option>
-        <option value="Payments">Payments</option>
-        <option value="Pets">Pets</option>
-        <option value="Restaurants">Restaurants</option>
-        <option value="Savings">Savings</option>
-        <option value="Supermarket">Supermarket</option>
-        <option value="Transportation">Transportation</option>
-        <option value="Vanity">Vanity</option>
-      </select>
-      <button type="submit" id="submitButton">Add Movement</button>
-    </form>
-
-    <h2>Filter by Date</h2>
-    <form id="filterForm">
-      <input type="date" id="startDate" required />
-      <input type="date" id="endDate" required />
-      <button type="submit">Filter</button>
-    </form>
-    <h3>
-      Filtered Balance: <span id="filteredBalance" class="amount">0.00</span>
-    </h3>
-
-    <h2>Summary</h2>
-    <table id="summaryTable">
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Total Income</th>
-          <th>Total Fixed Expenses</th>
-          <th>Total Credit Card Expenses</th>
-          <th>Total Debit Card Expenses</th>
-          <th>Balance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <h2>Daily Transactions</h2>
-    <table id="dailyTransactionsTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>Type</th>
-          <th>Category</th>
-          <th>Balance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <h2>Income</h2>
-    <table id="incomeTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Source</th>
-          <th class="amount">Amount</th>
-          <th>Category</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <h2>Fixed Expenses</h2>
-    <table id="fixedExpensesTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th class="amount">Amount</th>
-          <th>Category</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <h2>Credit Card Expenses</h2>
-    <table id="creditCardExpensesTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th class="amount">Amount</th>
-          <th>Category</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <h2>Debit Card Expenses</h2>
-    <table id="debitCardExpensesTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th class="amount">Amount</th>
-          <th>Category</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <div id="buttonContainer">
-      <button id="exportButton">Export Data</button>
-      <input type="file" id="importFile" style="display: none" />
-      <button id="importButton">Import Data</button>
+    <div id="dashboard" class="page">
+      <h1 id="formHeader">Add Movement</h1>
+      <form id="movementForm">
+        <input type="date" id="movementDate" required />
+        <select id="movementType" required>
+          <option value="Income">Income</option>
+          <option value="Credit Card Expense">Credit Card Expense</option>
+          <option value="Debit Card Expense">Debit Card Expense</option>
+        </select>
+        <input
+          type="text"
+          id="movementDescription"
+          placeholder="Description"
+          required
+        />
+        <input
+          type="number"
+          id="movementAmount"
+          step="0.01"
+          placeholder="Amount"
+          required
+        />
+        <select id="movementCategory" required>
+          <option value="Clothing">Clothing</option>
+          <option value="Fun">Fun</option>
+          <option value="Health">Health</option>
+          <option value="Home">Home</option>
+          <option value="Insurance">Insurance</option>
+          <option value="Others">Others</option>
+          <option value="Payments">Payments</option>
+          <option value="Pets">Pets</option>
+          <option value="Restaurants">Restaurants</option>
+          <option value="Savings">Savings</option>
+          <option value="Supermarket">Supermarket</option>
+          <option value="Transportation">Transportation</option>
+          <option value="Vanity">Vanity</option>
+          <option value="Subscription">Subscription</option>
+        </select>
+        <button type="submit" id="submitButton">Add Movement</button>
+      </form>
+      <h1>Summary</h1>
+      <table id="summaryTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Income</th>
+            <th>Credit Card Expenses</th>
+            <th>Debit Card Expenses</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <h2>Filter by Date</h2>
+      <form id="filterForm">
+        <input type="date" id="startDate" required />
+        <input type="date" id="endDate" required />
+        <button type="submit">Filter</button>
+      </form>
+      <div>Filtered Balance: <span id="filteredBalance"></span></div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="daily-transactions" class="page">
+      <h1>Daily Transactions</h1>
+      <table id="dailyTransactionsTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="income" class="page">
+      <h1>Income</h1>
+      <table id="incomeTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="credit-card-expenses" class="page">
+      <h1>Credit Card Expenses</h1>
+      <table id="creditCardExpensesTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="debit-card-expenses" class="page">
+      <h1>Debit Card Expenses</h1>
+      <table id="debitCardExpensesTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="scripts/data.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    <script src="scripts/dailyTransactions.js"></script>
+    <script src="scripts/movementTypes.js"></script>
+    <script src="scripts/navigation.js"></script>
   </body>
 </html>
