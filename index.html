@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finance Tracker</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <nav>
@@ -14,6 +15,7 @@
         <li><a href="#income">Income</a></li>
         <li><a href="#credit-card-expenses">Credit Card Expenses</a></li>
         <li><a href="#debit-card-expenses">Debit Card Expenses</a></li>
+        <li><a href="#charts">Charts</a></li>
       </ul>
     </nav>
 
@@ -146,10 +148,17 @@
       </table>
     </div>
 
+    <div id="charts" class="page">
+      <h1>Charts</h1>
+      <canvas id="creditCardExpensesChart"></canvas>
+      <canvas id="debitCardExpensesChart"></canvas>
+    </div>
+
     <script src="scripts/data.js"></script>
     <script src="scripts/dashboard.js"></script>
     <script src="scripts/dailyTransactions.js"></script>
     <script src="scripts/movementTypes.js"></script>
     <script src="scripts/navigation.js"></script>
+    <script src="scripts/charts.js"></script>
   </body>
 </html>
