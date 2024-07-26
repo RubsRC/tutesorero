@@ -207,6 +207,14 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
       }
+      showPage(
+        type === "Income"
+          ? "income"
+          : type === "Credit Card Expense"
+          ? "credit-card-expenses"
+          : "debit-card-expenses"
+      );
+      scrollToEditedRow(editingIndex);
     } else {
       if (type === "Income") {
         incomeData.push(movement);

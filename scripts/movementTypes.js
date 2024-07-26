@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     data.forEach((row, index) => {
       total += parseFloat(row[2]);
       const newRow = table.insertRow();
+      newRow.setAttribute("data-index", index); // Add data-index attribute to identify the row
       row.forEach((cell, cellIndex) => {
         const newCell = newRow.insertCell();
         newCell.textContent = cell;

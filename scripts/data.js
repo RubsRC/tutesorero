@@ -241,3 +241,11 @@ function showPage(pageId) {
     page.style.display = page.id === pageId ? "block" : "none";
   });
 }
+
+// Helper function to scroll to the edited row
+function scrollToEditedRow(index) {
+  const row = document.querySelector(`[data-index='${index}']`);
+  if (row) {
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
