@@ -214,7 +214,14 @@ document.addEventListener("DOMContentLoaded", () => {
           ? "credit-card-expenses"
           : "debit-card-expenses"
       );
-      scrollToEditedRow(editingIndex);
+      scrollToEditedRow(
+        editingIndex,
+        type === "Income"
+          ? "income"
+          : type === "Credit Card Expense"
+          ? "credit"
+          : "debit"
+      );
     } else {
       if (type === "Income") {
         incomeData.push(movement);

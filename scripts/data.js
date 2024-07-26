@@ -31,6 +31,8 @@ function updateTable(table, data, type) {
   data.forEach((row, index) => {
     total += parseFloat(row[2]);
     const newRow = table.insertRow();
+    const typeIndex = type.split(" ")[0];
+    newRow.setAttribute(`data-${typeIndex}-index`, index); // Add data-index attribute to identify the row
     row.forEach((cell, cellIndex) => {
       const newCell = newRow.insertCell();
       newCell.textContent = cell;
@@ -243,8 +245,8 @@ function showPage(pageId) {
 }
 
 // Helper function to scroll to the edited row
-function scrollToEditedRow(index) {
-  const row = document.querySelector(`[data-index='${index}']`);
+function scrollToEditedRow(index, type) {
+  const row = document.querySelector(`[data-${type}-index='${index}']`);
   if (row) {
     row.scrollIntoView({ behavior: "smooth", block: "center" });
   }
