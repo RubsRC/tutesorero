@@ -65,36 +65,6 @@ function updateTable(table, data, type) {
     `;
 }
 
-function filterData(startDate, endDate) {
-  const filteredIncome = incomeData.filter(
-    ([date]) => date >= startDate && date <= endDate
-  );
-  const filteredCreditCardExpenses = creditCardExpensesData.filter(
-    ([date]) => date >= startDate && date <= endDate
-  );
-  const filteredDebitCardExpenses = debitCardExpensesData.filter(
-    ([date]) => date >= startDate && date <= endDate
-  );
-
-  const totalIncome = filteredIncome.reduce(
-    (sum, [_, __, amount]) => sum + parseFloat(amount),
-    0
-  );
-  const totalCreditCardExpenses = filteredCreditCardExpenses.reduce(
-    (sum, [_, __, amount]) => sum + parseFloat(amount),
-    0
-  );
-  const totalDebitCardExpenses = filteredDebitCardExpenses.reduce(
-    (sum, [_, __, amount]) => sum + parseFloat(amount),
-    0
-  );
-
-  const filteredBalance =
-    totalIncome - (totalCreditCardExpenses + totalDebitCardExpenses);
-  document.getElementById("filteredBalance").textContent =
-    formatAmount(filteredBalance);
-}
-
 function calculateSummary() {
   const summary = {};
 
@@ -143,6 +113,36 @@ function calculateSummary() {
       if (index > 0) newCell.classList.add("amount");
     });
   });
+}
+
+function filterData(startDate, endDate) {
+  const filteredIncome = incomeData.filter(
+    ([date]) => date >= startDate && date <= endDate
+  );
+  const filteredCreditCardExpenses = creditCardExpensesData.filter(
+    ([date]) => date >= startDate && date <= endDate
+  );
+  const filteredDebitCardExpenses = debitCardExpensesData.filter(
+    ([date]) => date >= startDate && date <= endDate
+  );
+
+  const totalIncome = filteredIncome.reduce(
+    (sum, [_, __, amount]) => sum + parseFloat(amount),
+    0
+  );
+  const totalCreditCardExpenses = filteredCreditCardExpenses.reduce(
+    (sum, [_, __, amount]) => sum + parseFloat(amount),
+    0
+  );
+  const totalDebitCardExpenses = filteredDebitCardExpenses.reduce(
+    (sum, [_, __, amount]) => sum + parseFloat(amount),
+    0
+  );
+
+  const filteredBalance =
+    totalIncome - (totalCreditCardExpenses + totalDebitCardExpenses);
+  document.getElementById("filteredBalance").textContent =
+    formatAmount(filteredBalance);
 }
 
 function editEntry(type, index) {
@@ -200,4 +200,36 @@ function removeEntry(type, index) {
   saveData();
   calculateSummary();
   calculateDailyTransactions();
+}
+
+function calculateDailyTransactions() {
+  const transactions = [
+    ...incomeData.map((d) => [...d, "Income"]),
+    ...creditCardExpensesData.map((d) => [...d, "Credit Card Expense"]),
+    ...debitCardExpensesData.map((d) => [...d, "Debit Card Expense"]),
+  ];
+
+  transactions.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+  let balance = 0;
+  const dailyTransactionsTable = document
+    .getElementById("dailyTransactionsTable")
+    .getElementsByTagName("tbody")[0];
+  dailyTransactionsTable.innerHTML = "";
+  transactions.forEach(([date, description, amount, category, type]) => {
+    balance += (type === "Income" ? 1 : -1) * parseFloat(amount);
+    const newRow = dailyTransactionsTable.insertRow();
+    [
+      date,
+      description,
+      formatAmount(amount),
+      type,
+      category,
+      formatAmount(balance),
+    ].forEach((cell, index) => {
+      const newCell = newRow.insertCell();
+      newCell.textContent = cell;
+      if (index === 2 || index === 5) newCell.classList.add("amount");
+    });
+  });
 }
